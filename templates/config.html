@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV 配置</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .config-card {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card config-card">
+                    <div class="card-body">
+                        <h1 class="card-title mb-4">IPTV 配置</h1>
+                        <form id="configForm">
+                            <div class="mb-3">
+                                <label for="AuthenticationIP" class="form-label">认证服务器地址</label>
+                                <input type="text" class="form-control" id="AuthenticationIP" name="AuthenticationIP" placeholder="/EDS/jsp/AuthenticationURL认证IP，默认使用：http://182.138.3.142:8082">
+                            </div>
+                            <div class="mb-3">
+                                <label for="UserID" class="form-label">UserID</label>
+                                <input type="text" class="form-control" id="UserID" name="UserID" placeholder="UserID抓包获取：xxxx@ITV" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mac" class="form-label">MAC地址</label>
+                                <input type="text" class="form-control" id="mac" name="mac" placeholder="机顶盒背面MAC" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="STBID" class="form-label">STBID</label>
+                                <input type="text" class="form-control" id="STBID" name="STBID" placeholder="机顶盒背面STBID">
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="STBType" class="form-label">STB类型</label>
+                                <input type="text" class="form-control" id="STBType" name="STBType" placeholder="机顶盒型号，背面或抓包获取" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="STBVersion" class="form-label">STB版本</label>
+                                <input type="text" class="form-control" id="STBVersion" name="STBVersion" placeholder="机顶盒版本，抓包获取" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="Authenticator" class="form-label">Authenticator</label>
+                                <input type="text" class="form-control" id="Authenticator" name="Authenticator" placeholder="抓包获取" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="UDPxy" class="form-label">UDPxy地址</label>
+                                <input type="text" class="form-control" id="UDPxy" name="UDPxy" placeholder="例如：http://192.168.5.1:8888" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">保存配置并运行</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const config = {};
+            formData.forEach((value, key) => {
+                if (value) config[key] = value;
+            });
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            
+            fetch('/save_config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    return fetch('/run_script');
+                } else {
+                    throw new Error('保存配置失败：' + data.message);
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 5秒后跳转到index页面
+                    setTimeout(() => {
+                        window.location.href = '/channels';
+                    }, 100);
+                } else {
+                    throw new Error('脚本运行失败：' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
