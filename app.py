@@ -182,7 +182,7 @@ def setup_cron_job(cron_expression):
     try:
         # 获取当前脚本路径
         script_path = os.path.join(os.path.dirname(__file__), 'get_iptv_channels_V1.1.py')
-        python_path = os.path.join(os.path.dirname(__file__), 'iptv/bin/python')
+        python_path = sys.executable
         
         # 验证cron表达式格式
         fields = cron_expression.split()
