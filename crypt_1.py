@@ -92,7 +92,7 @@ def find_key(Authenticator: str) -> list:
             return []
     
     logger.info(f"开始测试00000000-99999999所有八位数字，Authenticator长度: {len(Authenticator)}")
-    for x in range(10000000,100000000):
+    for x in range(100000000):
         key = str('%08d'%x)
         if x % 500000 == 0:
             logger.info('已经搜索至：-- %s -- '%key)
