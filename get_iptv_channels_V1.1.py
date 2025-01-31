@@ -24,7 +24,7 @@ formatter = logging.Formatter(
 )
 
 # 文件处理器 - 限制日志文件最大10MB，保留3个备份
-file_handler = RotatingFileHandler('log/iptv.log', 
+file_handler = RotatingFileHandler(os.getcwd() + '/log/iptv.log', 
                                  maxBytes=4*1024*1024, 
                                  backupCount=3,
                                  encoding='utf-8')
@@ -321,8 +321,8 @@ def process_channel_data(channels: List[Tuple[str, ...]]) -> Dict[str, List[str]
     channels = [ch for ch in channels if "画中画" not in ch[1] and "单音轨" not in ch[1] and "热门" not in ch[1] and "直播室" not in ch[1] and "92" not in ch[1] and "精彩推荐专区" not in ch[1] and "精彩导视" not in ch[1]]
     
     # 使用with语句安全处理文件
-    with open('output/sctv.txt', 'w', encoding='utf-8') as ftxt, \
-         open('output/sctv.m3u', 'w', encoding='utf-8') as fm3u:
+    with open(os.getcwd() +'/output/sctv.txt', 'w', encoding='utf-8') as ftxt, \
+         open(os.getcwd() +'/output/sctv.m3u', 'w', encoding='utf-8') as fm3u:
         
         # 写入文件头
         ftxt.write('央视频道,#genre#\n')
@@ -460,7 +460,7 @@ def process_epg_data(channel_id: str, channel_name: List[str], response_text: st
 
 def write_epg_file(channel_info: Dict[str, List[str]], epg_data: Dict[str, List[Dict[str, str]]]):
     """写入EPG文件"""
-    with open('output/epg.xml', 'w', encoding='utf-8') as f:
+    with open(os.getcwd() +'/output/epg.xml', 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         f.write('<tv>\n')
         

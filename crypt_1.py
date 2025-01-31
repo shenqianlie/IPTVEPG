@@ -15,7 +15,7 @@ formatter = logging.Formatter(
 )
 
 # 文件处理器
-file_handler = logging.FileHandler('log/iptv.log', encoding='utf-8')
+file_handler = logging.FileHandler(os.getcwd() + '/log/iptv.log', encoding='utf-8')
 file_handler.setFormatter(formatter)
 
 # 标准输出处理器
@@ -92,7 +92,7 @@ def find_key(Authenticator: str) -> list:
             return []
     
     logger.info(f"开始测试00000000-99999999所有八位数字，Authenticator长度: {len(Authenticator)}")
-    for x in range(100000000):
+    for x in range(10000000,100000000):
         key = str('%08d'%x)
         if x % 500000 == 0:
             logger.info('已经搜索至：-- %s -- '%key)
@@ -116,3 +116,8 @@ def find_key(Authenticator: str) -> list:
         f.flush()
             
     return keys
+
+
+if __name__ == "__main__":
+    find_key('263D5D3BFCC8384102C7FB88BEA57FBF27DB4E1595E1A4260E3290D2844A14DF36F59D19F6CDA1F4AC78371C2C59BF9539FE94C3C3B135E4CA0B3BA5971D5FF1F8F78674F2F360EEB0FE440900984C32F52AADA96F5E8DE768F03D0867E95D11EF313CD7FD2C4836A2D6C55F12CF5D3D9ACF96C7F4326CEF1510143A1ACFFAE21A96CAE54F077D35')
+    print('111')
