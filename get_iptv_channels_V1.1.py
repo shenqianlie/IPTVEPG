@@ -334,8 +334,8 @@ def process_channel_data(channels: List[Tuple[str, ...]]) -> Dict[str, List[str]
                 if condition(channel[1]):
                     name = "CCTV-14高清" if channel[1] == "CCTV-少儿高清" else channel[1]
                     udpxy = config.get('UDPxy', 'http://192.168.5.1:8888')
-                    url = f'{udpxy}/rtp/{channel[3]}'
-                    
+                    # url = f'{udpxy}/rtp/{channel[3]}'
+                    url = f'rtp://{channel[3]}'
                     # 写入txt文件
                     
                     if channel[4] == '1': #支持时移的源
